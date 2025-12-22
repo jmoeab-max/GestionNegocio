@@ -1,0 +1,18 @@
+.DS_Store
+.env
+/node_modules/
+
+# React Router
+/.react-router/
+/build/
+
+/generated/prisma
+
+# Vite
+.vite/
+
+# Database
+dev.db
+
+# Logs
+dev_server.log

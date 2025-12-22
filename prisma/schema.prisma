@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  name        String?
+  password    String
+  role        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  appointments Appointment[]
+  commissions Commission[]
+}
+
+model Client {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  name        String
+  lastName    String?
+  phone       String?
+  birthDate   DateTime?
+  address     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  appointments Appointment[]
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  duration    Int // duration in minutes
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  appointments Appointment[]
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  sku         String    @unique
+  stock       Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  String
+  employee  User     @relation(fields: [employeeId], references: [id])
+  employeeId String
+  service   Service  @relation(fields: [serviceId], references: [id])
+  serviceId String
+  startTime DateTime
+  endTime   DateTime
+  status    String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Commission {
+  id          String   @id @default(cuid())
+  employee    User     @relation(fields: [employeeId], references: [id])
+  employeeId  String
+  amount      Float
+  date        DateTime @default(now())
+  status      String   @default("PENDING") // PENDING, PAID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
